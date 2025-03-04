@@ -1,0 +1,54 @@
+{
+  "name": "vcoin",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "create-token": "ts-node src/create-token.ts",
+    "allocate-token": "ts-node src/allocate-token.ts",
+    "update-metadata": "ts-node src/update-metadata.ts",
+    "presale": "ts-node src/presale.ts",
+    "vesting": "ts-node src/vesting.ts",
+    "test": "jest",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:security": "jest tests/security",
+    "test:e2e": "jest tests/e2e",
+    "test:coverage": "jest --coverage",
+    "test:metadata": "node scripts/test-metadata-update.js",
+    "test:all": "npm run test:unit && npm run test:integration && npm run test:security && npm run test:e2e && npm run test:metadata",
+    "test:quick": "jest --config jest.quick.config.js"
+  },
+  "keywords": [
+    "solana",
+    "token2022",
+    "vcoin",
+    "cryptocurrency"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "VCoin (VCN) - A Solana-based token using the token-2022 protocol",
+  "dependencies": {
+    "@metaplex-foundation/js": "^0.20.1",
+    "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
+    "@metaplex-foundation/umi": "^0.9.1",
+    "@metaplex-foundation/umi-bundle-defaults": "^0.9.1",
+    "@solana-program/token-2022": "^0.3.4",
+    "@solana/spl-token": "^0.4.12",
+    "@solana/web3.js": "^1.98.0",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.9",
+    "@babel/preset-env": "^7.26.9",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.12.5",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2"
+  }
+}
