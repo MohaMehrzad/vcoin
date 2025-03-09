@@ -409,22 +409,22 @@ describe('Vesting Branch Coverage Tests', () => {
       // Mock vesting data as initialized
       const mockVestingData = {
         initialized: true,
-        initializedAt: '2023-01-01T00:00:00Z',
-        presaleEndDate: '2023-01-01T00:00:00Z',
-        totalReleased: 500000,
-        nextReleaseDate: '2023-06-01T00:00:00Z',
+        initializedAt: '2025-01-01T00:00:00Z',
+        presaleEndDate: '2025-01-01T00:00:00Z',
+        totalReleased: 0,
+        nextReleaseDate: '2025-06-01T00:00:00Z',
         releases: [
           {
             releaseNumber: 1,
-            scheduledDate: '2023-01-01T00:00:00Z',
+            scheduledDate: '2025-01-01T00:00:00Z',
             amount: '50000000',
             executed: true,
-            executionDate: '2023-01-05T00:00:00Z',
-            transactionId: 'mock-tx-id'
+            executionDate: '2025-01-05T00:00:00Z',
+            transactionId: 'transaction-id-1'
           },
           {
             releaseNumber: 2,
-            scheduledDate: '2023-06-01T00:00:00Z',
+            scheduledDate: '2025-06-01T00:00:00Z',
             amount: '50000000',
             executed: false,
             executionDate: null,

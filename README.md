@@ -277,4 +277,4 @@ This project is proprietary and confidential. All rights reserved.
 
 ---
 
-© 2023 VCoin Project 
+© 2025 VCoin Project 
