@@ -79,7 +79,7 @@ describe('Security: Input Validation Tests', () => {
         mintAddress: '11111111111111111111111111111111',
         authorityAddress: '11111111111111111111111111111111',
         totalSupply: '1000000000',
-        decimals: 9
+        decimals: 6
       }));
     });
 
@@ -99,7 +99,7 @@ describe('Security: Input Validation Tests', () => {
         mintAddress: 'not-a-valid-public-key',
         authorityAddress: '11111111111111111111111111111111',
         totalSupply: '1000000000',
-        decimals: 9
+        decimals: 6
       }));
 
       // Loading should throw when validating the public key
@@ -116,7 +116,7 @@ describe('Security: Input Validation Tests', () => {
         mintAddress: '11111111111111111111111111111111',
         authorityAddress: '11111111111111111111111111111111',
         totalSupply: 'not-a-number',
-        decimals: 9
+        decimals: 6
       }));
 
       // Loading should throw when validating the token amount
@@ -133,7 +133,7 @@ describe('Security: Input Validation Tests', () => {
         authorityAddress: '11111111111111111111111111111111',
         authorityTokenAccount: '11111111111111111111111111111111', 
         totalSupply: '1000000000',
-        decimals: 9,
+        decimals: 6,
         "__proto__": {
           "malicious": "payload"
         }

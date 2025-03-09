@@ -112,7 +112,7 @@ describe('Update Metadata Coverage Tests', () => {
       mintAddress: 'mock-mint-address',
       authorityAddress: 'mock-authority-address',
       totalSupply: '1000000000',
-      decimals: 9,
+      decimals: 6,
       name: 'VCoin',
       symbol: 'VCN',
       uri: 'https://example.com/metadata.json'
@@ -169,7 +169,7 @@ describe('Update Metadata Coverage Tests', () => {
         mintAddress: 'mock-mint-address',
         authorityAddress: 'mock-authority-address',
         totalSupply: '1000000000',
-        decimals: 9
+        decimals: 6
         // Missing name, symbol, uri
       }));
       

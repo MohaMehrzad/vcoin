@@ -93,7 +93,7 @@ describe('Utils Coverage Tests', () => {
           mintAddress: 'mock-mint-address',
           authorityAddress: 'mock-authority-address',
           totalSupply: '1000000000',
-          decimals: 9,
+          decimals: 6,
           name: 'VCoin',
           symbol: 'VCN',
           checksum: 'mock-hash'
@@ -354,7 +354,7 @@ describe('Utils Coverage Tests', () => {
             mintAddress: 'mock-mint-address',
             authorityAddress: 'mock-authority-address',
             totalSupply: '1000000000',
-            decimals: 9,
+            decimals: 6,
             name: 'VCoin',
             symbol: 'VCN',
             checksum: 'mock-hash'

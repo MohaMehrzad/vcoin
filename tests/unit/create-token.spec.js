@@ -120,7 +120,7 @@ jest.mock('../../src/utils', () => {
     }),
     TOKEN_NAME: 'VCoin',
     TOKEN_SYMBOL: 'VCN',
-    TOKEN_DECIMALS: 9,
+    TOKEN_DECIMALS: 6,
     TOKEN_TOTAL_SUPPLY: 1000000000,
     tokensToRawAmount: jest.fn().mockReturnValue('1000000000000'),
     saveTokenMetadata: jest.fn(),

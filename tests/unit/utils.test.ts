@@ -78,7 +78,7 @@ describe('Utils Module Tests', () => {
     authorityAddress: '22222222222222222222222222222222',
     authorityTokenAccount: '33333333333333333333333333333333',
     totalSupply: '1000000000',
-    decimals: 9
+    decimals: 6
   };
 
   describe('Token Amount Conversion Tests', () => {
