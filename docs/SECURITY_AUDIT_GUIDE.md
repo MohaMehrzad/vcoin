@@ -95,21 +95,45 @@ The VCoin project is a comprehensive Solana token implementation with features i
    - Risk: Unprotected storage or transmission of private keys
    - Impact: Complete compromise of token authority
    - Files to review: `utils.ts`, `create-token.ts`
+   
+   **Current Mitigations**:
+   - Keypairs are stored in a separate, gitignored `keypairs/` directory
+   - Strict file permissions are enforced for keypair files
+   - Input validation prevents path traversal in keypair names
+   - Clear user warnings about private key security in CLI interfaces
+   - Implementation in `utils.ts:170-220` includes validation, secure storage, and error handling
 
 2. **Unauthorized Token Transfers**
    - Risk: Missing or incorrect authority checks
    - Impact: Theft of tokens
    - Files to review: `allocate-token.ts`, `presale.ts`, `vesting.ts`
+   
+   **Current Mitigations**:
+   - Authority verification before all token transfers (see `allocate-token.ts:120-135`)
+   - Public key matching against stored metadata
+   - Transaction signing with proper authority keypair
+   - Comprehensive tests for authority verification (see `tests/unit/allocate-token.test.ts`)
 
 3. **Path Traversal**
    - Risk: Insufficient validation of file paths
    - Impact: Unauthorized file access
    - Files to review: `utils.ts` (file system operations)
+   
+   **Current Mitigations**:
+   - Path validation in `utils.ts:160-175` checks for ".." and path separator characters
+   - Explicit regex validation for keypair names and other file paths
+   - Tests specifically targeting path traversal attempts (see `tests/unit/utils-coverage.spec.js`)
 
 4. **Integer Overflow/Underflow**
    - Risk: Insufficient handling of large token amounts
    - Impact: Incorrect token transfers, possible theft
    - Files to review: `utils.ts` (token conversion functions)
+   
+   **Current Mitigations**:
+   - Use of BigInt for all token amount calculations
+   - Boundary checks for token conversions in `utils.ts:50-70`
+   - Explicit error handling for negative amounts
+   - Tests for edge cases with very large token amounts (see `tests/unit/utils-coverage.spec.js`)
 
 ### Medium-Risk Areas
 
@@ -117,16 +141,34 @@ The VCoin project is a comprehensive Solana token implementation with features i
    - Risk: Insufficient integrity checking
    - Impact: Incorrect token parameters
    - Files to review: `utils.ts` (metadata functions)
+   
+   **Current Mitigations**:
+   - Checksum validation for metadata integrity in `utils.ts:330-345`
+   - SHA-256 hash verification of metadata content
+   - Required field validation for metadata objects
+   - Tests for tampered metadata scenarios (see `tests/unit/utils.test.ts`)
 
 2. **Input Validation Bypasses**
    - Risk: Insufficient input sanitization
    - Impact: Injection attacks, unexpected behavior
    - Files to review: All user input handling
+   
+   **Current Mitigations**:
+   - Type checking and boundary validation for all inputs
+   - Regex validation for string inputs
+   - Explicit error messages for validation failures
+   - Tests specifically targeting boundary conditions and invalid inputs
 
 3. **Error Handling Issues**
    - Risk: Improper error handling
    - Impact: Information leakage, system instability
    - Files to review: All error handling logic
+   
+   **Current Mitigations**:
+   - Centralized error handling through `handleError` function
+   - Environment-aware error handling (different behavior for test/production)
+   - Graceful process termination with descriptive error messages
+   - Comprehensive error testing (see `tests/unit/handleError.spec.js`)
 
 ## Code Review Priorities
 
