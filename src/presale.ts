@@ -105,6 +105,16 @@ export async function endPresale() {
 export async function processPurchase(buyerAddress: string, usdAmount: number) {
   const presaleData = loadPresaleData();
   
+  // Load token metadata first to check allocations
+  const tokenMetadata = loadTokenMetadata();
+  const mintAddress = new PublicKey(tokenMetadata.mintAddress);
+  
+  // Get presale wallet from allocations - check this first
+  if (!tokenMetadata.allocations || !tokenMetadata.allocations.presale) {
+    throw new Error('Token allocations not set up correctly. Run allocation script first.');
+  }
+  
+  // Now check if presale is active
   if (!presaleData.isActive) {
     throw new Error('Presale is not active');
   }
@@ -118,15 +128,6 @@ export async function processPurchase(buyerAddress: string, usdAmount: number) {
   
   // Connect to Solana
   const connection = getConnection();
-  
-  // Load token metadata
-  const tokenMetadata = loadTokenMetadata();
-  const mintAddress = new PublicKey(tokenMetadata.mintAddress);
-  
-  // Get presale wallet from allocations
-  if (!tokenMetadata.allocations || !tokenMetadata.allocations.presale) {
-    throw new Error('Token allocations not set up correctly. Run allocation script first.');
-  }
   
   const presaleWalletAddress = new PublicKey(tokenMetadata.allocations.presale.wallet);
   const presaleTokenAccount = new PublicKey(tokenMetadata.allocations.presale.tokenAccount);

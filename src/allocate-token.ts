@@ -24,6 +24,24 @@ import {
   saveTokenMetadata,
 } from './utils';
 
+/**
+ * Handle errors based on the environment
+ * @param error - The error to handle
+ */
+export function handleError(error?: Error | string): never {
+  // In test environment, throw the error for the test to catch
+  if (process.env.NODE_ENV === 'test') {
+    throw error instanceof Error ? error : new Error(error || 'Unknown error');
+  }
+  
+  // In production, log and exit
+  console.error('Error:', error);
+  process.exit(1);
+}
+
+/**
+ * Allocate tokens to different wallets according to tokenomics
+ */
 export async function allocateTokens() {
   console.log('Starting token allocation...');
   
@@ -35,8 +53,7 @@ export async function allocateTokens() {
   try {
     tokenMetadata = loadTokenMetadata();
   } catch (error) {
-    console.error('Error: Token metadata not found. Create a token first using "npm run create-token"');
-    process.exit(1);
+    handleError('Token metadata not found. Create a token first using "npm run create-token"');
   }
   
   const mintAddress = new PublicKey(tokenMetadata.mintAddress);
@@ -49,11 +66,10 @@ export async function allocateTokens() {
   
   // Verify the loaded authority matches the token metadata
   if (!authorityKeypair.publicKey.equals(authorityAddress)) {
-    console.error('Error: The loaded authority keypair does not match the token authority.');
-    console.error(`Expected: ${authorityAddress.toString()}`);
-    console.error(`Loaded: ${authorityKeypair.publicKey.toString()}`);
-    console.error('Please ensure you are using the same wallet that created the token.');
-    process.exit(1);
+    handleError('The loaded authority keypair does not match the token authority.\n' +
+      `Expected: ${authorityAddress.toString()}\n` +
+      `Loaded: ${authorityKeypair.publicKey.toString()}\n` +
+      'Please ensure you are using the same wallet that created the token.');
   }
   
   // Check authority balance
@@ -61,9 +77,8 @@ export async function allocateTokens() {
   console.log(`Authority SOL balance: ${solBalance / LAMPORTS_PER_SOL} SOL`);
   
   if (solBalance < 0.1 * LAMPORTS_PER_SOL) {
-    console.error('Error: Authority account does not have enough SOL.');
-    console.error('Please fund your wallet with at least 0.1 SOL on devnet before continuing.');
-    process.exit(1);
+    handleError('Authority account does not have enough SOL.\n' +
+      'Please fund your wallet with at least 0.1 SOL on devnet before continuing.');
   }
   
   // Check token balance
@@ -76,14 +91,12 @@ export async function allocateTokens() {
     );
     
     if (BigInt(balance.amount) < BigInt(requiredAmount)) {
-      console.error('Error: Authority does not have enough tokens for allocation.');
-      console.error(`Required: ${requiredAmount}`);
-      console.error(`Available: ${balance.amount}`);
-      process.exit(1);
+      handleError('Authority does not have enough tokens for allocation.\n' +
+        `Required: ${requiredAmount}\n` +
+        `Available: ${balance.amount}`);
     }
   } catch (error) {
-    console.error('Error checking token balance:', error);
-    process.exit(1);
+    handleError(`Error checking token balance: ${error}`);
   }
   
   console.log('\nCreating allocation wallets...');
@@ -272,14 +285,23 @@ export async function allocateTokens() {
     console.log(`Vesting: ${VESTING_ALLOCATION} ${tokenMetadata.symbol}`);
     console.log('=========================================');
     
+    return tokenMetadata;
   } catch (error) {
-    console.error('\nError allocating tokens:', error);
-    process.exit(1);
+    handleError(`Error allocating tokens: ${error}`);
   }
 }
 
-// Execute the function
-allocateTokens().catch(err => {
-  console.error('Error allocating tokens:', err);
-  process.exit(1);
-}); 
+/**
+ * Main execution function that runs when this file is executed directly
+ */
+export function main() {
+  allocateTokens().catch(err => {
+    console.error('Error allocating tokens:', err);
+    process.exit(1);
+  });
+}
+
+// Execute the function only when this file is run directly
+if (require.main === module) {
+  main();
+} 

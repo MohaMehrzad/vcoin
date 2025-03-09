@@ -1,22 +1,25 @@
-import { 
+// This file contains the functions extracted from create-token.ts for testing
+const { 
   TOKEN_2022_PROGRAM_ID, 
   createMint,
   createAssociatedTokenAccountIdempotent,
   mintTo,
-  ExtensionType,
-} from '@solana/spl-token';
-import {
+} = require('@solana/spl-token');
+
+const {
   Connection,
   Keypair,
   PublicKey,
-  sendAndConfirmTransaction,
   LAMPORTS_PER_SOL,
-} from '@solana/web3.js';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as readline from 'readline';
-import bs58 from 'bs58';
-import {
+} = require('@solana/web3.js');
+
+const fs = require('fs');
+const path = require('path');
+const readline = require('readline');
+const bs58 = require('bs58');
+
+// Import from utils
+const {
   getConnection,
   getOrCreateKeypair,
   TOKEN_NAME,
@@ -25,10 +28,10 @@ import {
   TOKEN_TOTAL_SUPPLY,
   tokensToRawAmount,
   saveTokenMetadata
-} from './utils';
+} = require('../../src/utils');
 
 // Helper function to handle errors based on environment
-export function handleError(message: string, error?: Error): never {
+function handleError(message, error) {
   console.error(message, error);
   if (process.env.NODE_ENV === 'test') {
     throw error || new Error(message);
@@ -38,7 +41,7 @@ export function handleError(message: string, error?: Error): never {
 }
 
 // Function to get keypair from secret key input
-export async function getKeypairFromPhantom(): Promise<Keypair> {
+async function getKeypairFromPhantom() {
   console.log("\nYou can use your existing Phantom wallet as the authority.");
   console.log("\nTo export your private key from Phantom wallet:");
   console.log("1. Open Phantom wallet");
@@ -61,7 +64,7 @@ export async function getKeypairFromPhantom(): Promise<Keypair> {
     console.log('1. Use the existing keypair');
     console.log('2. Create a new keypair from your Phantom wallet');
     
-    const answer = await new Promise<string>(resolve => {
+    const answer = await new Promise(resolve => {
       rl.question('Enter your choice (1 or 2): ', resolve);
     });
     
@@ -72,7 +75,7 @@ export async function getKeypairFromPhantom(): Promise<Keypair> {
   }
   
   // Get private key from user
-  const privateKeyBase58 = await new Promise<string>(resolve => {
+  const privateKeyBase58 = await new Promise(resolve => {
     rl.question('Enter your Phantom wallet private key: ', resolve);
   });
   
@@ -101,15 +104,11 @@ export async function getKeypairFromPhantom(): Promise<Keypair> {
     console.log(`Public key (wallet address): ${keypair.publicKey.toString()}`);
     return keypair;
   } catch (error) {
-    return handleError('Error creating keypair from private key:', error as Error);
+    return handleError('Error creating keypair from private key:', error);
   }
 }
 
-export interface CreateVCoinOptions {
-  skipBalanceCheck?: boolean;
-}
-
-export async function createVCoinToken(options: CreateVCoinOptions = {}) {
+async function createVCoinToken(options = {}) {
   // For testing purposes, allow overriding the balance check
   const skipBalanceCheck = options.skipBalanceCheck || false;
   
@@ -119,7 +118,7 @@ export async function createVCoinToken(options: CreateVCoinOptions = {}) {
   const connection = getConnection();
   
   // Get or create authority keypair
-  let authorityKeypair: Keypair;
+  let authorityKeypair;
   const useExistingKeypair = process.argv.includes('--use-existing');
   
   if (useExistingKeypair) {
@@ -141,7 +140,7 @@ export async function createVCoinToken(options: CreateVCoinOptions = {}) {
   // Create mint account using token-2022 program
   console.log('\nCreating mint account with token-2022 program...');
   // No extensions for now, but can be added later
-  const extensions: ExtensionType[] = [];
+  const extensions = [];
   
   try {
     // Create the mint
@@ -223,14 +222,13 @@ export async function createVCoinToken(options: CreateVCoinOptions = {}) {
       tokenData
     };
   } catch (error) {
-    return handleError('\nError creating token:', error as Error);
+    return handleError('\nError creating token:', error);
   }
 }
 
-// Execute the function only when this file is run directly, not when imported
-if (require.main === module) {
-  createVCoinToken().catch(err => {
-    console.error('Error creating token:', err);
-    process.exit(1);
-  });
-} 
+// Export the functions for testing
+module.exports = {
+  getKeypairFromPhantom,
+  createVCoinToken,
+  handleError
+}; 

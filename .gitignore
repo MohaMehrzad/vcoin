@@ -6,6 +6,10 @@ unsigned_tx.bin
 *.key
 *.keystore
 *.jks
+authority.json
+presale-data.json
+vesting-data.json
+token-metadata-update.json
 
 # Dependencies
 node_modules/
